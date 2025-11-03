@@ -1,10 +1,10 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 def main_menu():
+
     keyboard = [
         [
-            InlineKeyboardButton("🎥 YouTube", callback_data="menu_youtube"),
-            InlineKeyboardButton("📸 Instagram", callback_data="menu_instagram"),
+            InlineKeyboardButton("🎥 YouTube e Instagram", callback_data="menu_social_network_extraction"),
         ],
         [
             InlineKeyboardButton("🔊 Extrair Áudio", callback_data="menu_extract_audio"),
@@ -15,3 +15,15 @@ def main_menu():
         ],
     ]
     return InlineKeyboardMarkup(keyboard)
+
+# Criando menu para o download das mídias
+async def type_quality_menu(message, medias):
+
+    keyboard = []
+
+    for media in medias:
+
+        keyboard.append([InlineKeyboardButton(f"🎞️ {media["type"]} - {media["quality"]}", callback_data=f"extract-{media["formatId"]}")])
+
+    markup = InlineKeyboardMarkup(keyboard)
+    await message.reply_text("👉 Escolha a qualidade:", reply_markup=markup)
