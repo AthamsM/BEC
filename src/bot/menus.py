@@ -23,7 +23,7 @@ async def type_quality_menu(message, medias):
 
     for media in medias:
 
-        keyboard.append([InlineKeyboardButton(f"🎞️ {media["type"]} - {media["quality"]}", callback_data=f"extract-{media["formatId"]}")])
+        keyboard.append([InlineKeyboardButton(f"🎞️ {media['type']} - {media['quality']}", callback_data=f"extract-{media['formatId']}")])
 
     markup = InlineKeyboardMarkup(keyboard)
     await message.reply_text("👉 Escolha a qualidade:", reply_markup=markup)

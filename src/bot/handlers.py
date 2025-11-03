@@ -3,6 +3,7 @@ from telegram import Update
 from telegram.ext import ContextTypes, CallbackQueryHandler, CommandHandler
 from .menus import main_menu
 from src.services.social_network_extraction import social_network_extraction
+from src.services import extract_audio
 
 logger = logging.getLogger(__name__)
 
@@ -28,12 +29,17 @@ async def menu_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data["operation"] = "social_network_extraction"
 
     elif data == "menu_extract_audio":
+        
         await query.edit_message_text("🔊 Envie um vídeo e eu extraio o áudio pra você.")
+        
+        context.user_data["operation"] = "extract_audio"
 
     elif data == "menu_audio_convert":
+        
         await query.edit_message_text("🎧 Envie um arquivo de áudio e escolha o formato de saída.")
 
     elif data == "menu_video_convert":
+        
         await query.edit_message_text("🎬 Envie um vídeo e escolha o formato de saída.")
 
     # Olhando se o usuário escolheu alguma opção de mídia para baixar
@@ -50,8 +56,8 @@ async def menu_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
             if fm["formatId"] == choice :
                 
-                await query.message.reply_text(f"👉 Você escolheu: {fm["type"]} - {fm["quality"]}")
-                await query.message.reply_text(f"👉 Link: {fm["url"]}")
+                await query.message.reply_text(f"👉 Você escolheu: {fm['type']} - {fm['quality']}")
+                await query.message.reply_text(f"👉 Link: {fm['url']}")
                 return
         
         await query.message.reply_text("❌ Mídia não encontrada")
@@ -66,12 +72,17 @@ async def message_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # Pegando a operação que o usuário quer fazer
     data = context.user_data["operation"]
+    logger.info(f"Message calback é {data}")
 
     if data == "social_network_extraction" :
 
         # Chamando a função que vai fazer a extração
         await social_network_extraction(update, context)
-
+        
+    elif data == "extract_audio":
+        
+        await extract_audio.handle(update, context)
+    
     else :
 
         await message.reply_text("❌ Mensagem Inválida")
