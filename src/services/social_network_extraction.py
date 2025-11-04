@@ -38,7 +38,7 @@ async def social_network_extraction(update: Update, context: ContextTypes.DEFAUL
             for media in medias :
 
                 filtered_media.append({
-                    "formatId": media.get("formatId"),
+                    "formatId": media.get("formatId") or media.get("id"),
                     "label": media.get("label"),
                     "type": media.get("type"),
                     "ext": media.get("ext"),

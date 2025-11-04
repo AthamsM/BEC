@@ -54,7 +54,7 @@ async def menu_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # Retornando o download da mídia selecionada para o usuário
         for fm in filtered_media :
 
-            if fm["formatId"] == choice :
+            if int(fm["formatId"]) == choice :
                 
                 await query.message.reply_text(f"👉 Você escolheu: {fm['type']} - {fm['quality']}")
                 await query.message.reply_text(f"👉 Link: {fm['url']}")
