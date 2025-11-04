@@ -4,6 +4,7 @@ from telegram.ext import ContextTypes, CallbackQueryHandler, CommandHandler
 from .menus import main_menu
 from src.services.social_network_extraction import social_network_extraction
 from src.services import extract_audio
+from src.services.audio_converter import audio_receive, audio_convert
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +39,8 @@ async def menu_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         
         await query.edit_message_text("🎧 Envie um arquivo de áudio e escolha o formato de saída.")
 
+        context.user_data["operation"] = "audio_converter"
+
     elif data == "menu_video_convert":
         
         await query.edit_message_text("🎬 Envie um vídeo e escolha o formato de saída.")
@@ -61,6 +64,10 @@ async def menu_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 return
         
         await query.message.reply_text("❌ Mídia não encontrada")
+    
+    # Olhando qual das opções de conversão o usuário escolheu para prosseguir na conversão de áudio
+    elif data.startswith("convert_audio"):
+        await audio_convert(update, context)
 
     else:
         await query.edit_message_text("❌ Opção desconhecida.")
@@ -71,7 +78,7 @@ async def message_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message = update.message
 
     # Pegando a operação que o usuário quer fazer
-    data = context.user_data["operation"]
+    data = context.user_data.get("operation")
     logger.info(f"Message calback é {data}")
 
     if data == "social_network_extraction" :
@@ -82,6 +89,10 @@ async def message_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     elif data == "extract_audio":
         
         await extract_audio.handle(update, context)
+    
+    elif data == "audio_converter":
+
+        await audio_receive(update, context)
     
     else :
 
