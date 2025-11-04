@@ -16,14 +16,11 @@ async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Recebe um vídeo do Telegram, extrai o áudio e envia o MP3 de volta."""
 
     message = update.message
-    logger.info("📩 Recebendo mensagem...")
 
     file = None
     if message.video:
-        logger.info("🎥 Vídeo detectado.")
         file = await message.video.get_file()
     elif message.document and message.document.mime_type.startswith("video/"):
-        logger.info("📄 Documento de vídeo detectado.")
         file = await message.document.get_file()
     else:
         await message.reply_text("❌ Envie um vídeo para extrair o áudio.")
@@ -36,20 +33,15 @@ async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
     audio_filename = f"{file.file_id}.mp3"
     audio_path = os.path.join(TEMP_DIR, audio_filename)
 
-    logger.info(f"⬇️ Baixando vídeo para {video_path}")
     await file.download_to_drive(video_path)
-    logger.info("✅ Download concluído")
 
     try:
-        logger.info("🎞️ Abrindo vídeo com MoviePy...")
         clip = VideoFileClip(video_path)
-        logger.info("🎧 Extraindo áudio...")
         clip.audio.write_audiofile(audio_path, codec="mp3", verbose=False, logger=None)
         clip.close()
-        logger.info(f"✅ Áudio extraído em: {audio_path}")
 
         await message.reply_audio(audio=open(audio_path, "rb"), caption="✅ Áudio extraído com sucesso!")
-        logger.info("📤 Áudio enviado para o usuário.")
+        
 
         # Base64 opcional
         with open(audio_path, "rb") as f:
@@ -64,7 +56,5 @@ async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # Limpeza
         if os.path.exists(video_path):
             os.remove(video_path)
-            logger.info(f"🧹 Removido {video_path}")
         if os.path.exists(audio_path):
             os.remove(audio_path)
-            logger.info(f"🧹 Removido {audio_path}")
