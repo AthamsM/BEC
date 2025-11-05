@@ -49,4 +49,25 @@ async def audio_convert_menu(message, context: ContextTypes.DEFAULT_TYPE):
     ]
 
     markup = InlineKeyboardMarkup(keyboard)
-    await message.reply_text("🎚️ Escolha o formato de áudio para conversão:", reply_markup=markup)
+    await message.reply_text("🎧 Escolha o formato de áudio para conversão:", reply_markup=markup)
+
+async def video_convert_menu(message, context: ContextTypes.DEFAULT_TYPE):
+
+    keyboard = [
+        [InlineKeyboardButton("MKV 🎞️", callback_data="convert_video-mkv"),
+        InlineKeyboardButton("FLV 📺", callback_data="convert_video-flv")],
+
+        [InlineKeyboardButton("MOV 🎬", callback_data="convert_video-mov"),
+        InlineKeyboardButton("AVI 🎥", callback_data="convert_video-avi")],
+
+        [InlineKeyboardButton("WEBM 🌐", callback_data="convert_video-webm"),
+        InlineKeyboardButton("WMV 🪟", callback_data="convert_video-wmv")],
+
+        [InlineKeyboardButton("OGV 🟠", callback_data="convert_video-ogv"),
+        InlineKeyboardButton("3GP 📱", callback_data="convert_video-3gp")],
+
+        [InlineKeyboardButton("MP4 🎞️", callback_data="convert_video-mp4")]
+    ]
+
+    markup = InlineKeyboardMarkup(keyboard)
+    await message.reply_text("🎬 Escolha o formato de vídeo para conversão:", reply_markup=markup)
