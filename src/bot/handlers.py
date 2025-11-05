@@ -5,6 +5,7 @@ from .menus import main_menu
 from src.services.social_network_extraction import social_network_extraction
 from src.services import extract_audio
 from src.services.audio_converter import audio_receive, audio_convert
+from src.services.video_converter import video_receive, video_convert
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +46,8 @@ async def menu_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         
         await query.edit_message_text("🎬 Envie um vídeo e escolha o formato de saída.")
 
+        context.user_data["operation"] = "video_converter"
+
     # Olhando se o usuário escolheu alguma opção de mídia para baixar
     elif data.startswith("extract-"):
 
@@ -68,6 +71,9 @@ async def menu_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Olhando qual das opções de conversão o usuário escolheu para prosseguir na conversão de áudio
     elif data.startswith("convert_audio"):
         await audio_convert(update, context)
+
+    elif data.startswith("convert_video"):
+        await video_convert(update, context)
 
     else:
         await query.edit_message_text("❌ Opção desconhecida.")
@@ -93,6 +99,10 @@ async def message_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     elif data == "audio_converter":
 
         await audio_receive(update, context)
+
+    elif data == "video_converter":
+
+        await video_receive(update, context)
     
     else :
 
