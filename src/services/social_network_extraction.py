@@ -61,3 +61,25 @@ async def social_network_extraction(update: Update, context: ContextTypes.DEFAUL
 
         await message.reply_text("❌ Erro ao tentar enviar o link")
         return
+    
+async def download_media(data, update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    query = update.callback_query
+    await query.answer() 
+
+    # Pegando o id da mídia que o usuário escolheu para baixar
+    choice = str(data.split("-", 1)[1])
+
+    # Recuperando a filtered_media
+    filtered_media = context.user_data.get("filtered_media", [])
+
+    # Retornando o download da mídia selecionada para o usuário
+    for fm in filtered_media :
+
+        if str(fm["formatId"]) == choice :
+            
+            await query.message.reply_text(f"👉 Você escolheu: {fm['type']} - {fm['quality']}")
+            await query.message.reply_text(f"👉 Link: {fm['url']}")
+            return
+    
+    await query.message.reply_text("❌ Mídia não encontrada")

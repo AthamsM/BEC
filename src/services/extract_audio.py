@@ -11,7 +11,6 @@ logger = logging.getLogger(__name__)
 TEMP_DIR = os.path.join(tempfile.gettempdir(), "bec_audio_extractor")
 os.makedirs(TEMP_DIR, exist_ok=True)
 
-
 async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Recebe um vídeo do Telegram, extrai o áudio e envia o MP3 de volta."""
 
