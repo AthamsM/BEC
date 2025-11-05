@@ -17,15 +17,29 @@ def main_menu():
     ]
     return InlineKeyboardMarkup(keyboard)
 
-# Criando menu para o download das mídias
+# Criando o menu para o download das mídias
 async def type_quality_menu(message, medias):
 
     keyboard = []
+    board = []
+    aux = 0
 
     for media in medias:
 
-        keyboard.append([InlineKeyboardButton(f"🎞️ {media['type']} - {media['quality']}", callback_data=f"extract-{media['formatId']}")])
+        board.append(InlineKeyboardButton(f"🎞️ {media['type']} - {media['quality']}", callback_data=f"extract-{media['formatId']}"))
+        
+        aux = aux + 1
 
+        if aux % 2 == 0 :
+
+            keyboard.append(board)
+            board = []
+
+    if aux % 2 != 0 :
+
+        keyboard.append(board)
+
+    print(keyboard)
     markup = InlineKeyboardMarkup(keyboard)
     await message.reply_text("👉 Escolha a qualidade:", reply_markup=markup)
 
