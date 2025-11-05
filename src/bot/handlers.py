@@ -2,7 +2,7 @@ import logging
 from telegram import Update
 from telegram.ext import ContextTypes, CallbackQueryHandler, CommandHandler
 from .menus import main_menu
-from src.services.social_network_extraction import social_network_extraction
+from src.services.social_network_extraction import social_network_extraction, download_media
 from src.services import extract_audio
 from src.services.audio_converter import audio_receive, audio_convert
 from src.services.video_converter import video_receive, video_convert
@@ -51,23 +51,9 @@ async def menu_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Olhando se o usuário escolheu alguma opção de mídia para baixar
     elif data.startswith("extract-"):
 
-        # Pegando o id da mídia que o usuário escolheu para baixar
-        choice = int(data.split("-", 1)[1])
-
-        # Recuperando a filtered_media
-        filtered_media = context.user_data.get("filtered_media", [])
-
-        # Retornando o download da mídia selecionada para o usuário
-        for fm in filtered_media :
-
-            if int(fm["formatId"]) == choice :
-                
-                await query.message.reply_text(f"👉 Você escolheu: {fm['type']} - {fm['quality']}")
-                await query.message.reply_text(f"👉 Link: {fm['url']}")
-                return
+        # Função que vai mandar a mídia para o usuário 
+        await download_media(data, update, context)
         
-        await query.message.reply_text("❌ Mídia não encontrada")
-    
     # Olhando qual das opções de conversão o usuário escolheu para prosseguir na conversão de áudio
     elif data.startswith("convert_audio"):
         await audio_convert(update, context)
