@@ -7,6 +7,8 @@ Bot Telegram para extração de vídeos e áudios do YouTube e Instagram e conve
 ```bash
 python3 -m venv venv
 source venv/bin/activate
+    ou
+.\venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 python main.py
 ```

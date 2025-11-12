@@ -1,9 +1,9 @@
 import logging
-from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler
+from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, MessageHandler, filters
 
 # Importa o TOKEN e os handlers
 from src.config.settings import TOKEN
-from src.bot.handlers import start, menu_callback
+from src.bot.handlers import start, menu_callback, message_callback
 
 # Configuração do logging
 logging.basicConfig(
@@ -22,6 +22,7 @@ def main():
     # Handlers principais
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(menu_callback))
+    app.add_handler(MessageHandler(filters.ALL & ~ filters.COMMAND, message_callback))
 
     # TODO: Adicionar handlers para receber mensagens (links, arquivos)
     # Ex: app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
